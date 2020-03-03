@@ -62,8 +62,9 @@ func (api AmazonMWSAPI) genSignAndPostFetch(Action string, ActionPath string, Pa
 		return "", err
 	}
 
-	resp, err := http.Post(signedurl, "text", nil)
+	resp, err := http.Post(signedurl, "text/xml", nil)
 	if err != nil {
+		fmt.Println("oops")
 		return "", err
 	}
 
