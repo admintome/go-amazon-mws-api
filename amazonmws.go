@@ -34,7 +34,7 @@ func (api AmazonMWSAPI) GetLowestPricedOffersForASIN(items []string) (string, er
 
 	params["MarketplaceId"] = string(api.MarketplaceId)
 
-	return api.genSignAndFetch("GetLowestPricedOffersForASIN", "/Products/2011-10-01", params)
+	return api.genSignAndPostFetch("GetLowestPricedOffersForASIN", "/Products/2011-10-01", params)
 }
 
 /*

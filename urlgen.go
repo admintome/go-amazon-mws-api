@@ -49,6 +49,33 @@ func (api AmazonMWSAPI) genSignAndFetch(Action string, ActionPath string, Parame
 	return string(body), nil
 }
 
+func (api AmazonMWSAPI) genSignAndPostFetch(Action string, ActionPath string, Parameters map[string]string) (string, error) {
+	genUrl, err := GenerateAmazonUrl(api, Action, ActionPath, Parameters)
+	if err != nil {
+		return "", err
+	}
+
+	SetTimestamp(genUrl)
+
+	signedurl, err := SignAmazonUrl(genUrl, api)
+	if err != nil {
+		return "", err
+	}
+
+	resp, err := http.Post(signedurl, "text", nil)
+	if err != nil {
+		return "", err
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", err
+	}
+
+	return string(body), nil
+}
+
 func GenerateAmazonUrl(api AmazonMWSAPI, Action string, ActionPath string, Parameters map[string]string) (finalUrl *url.URL, err error) {
 	result, err := url.Parse(api.Host)
 	if err != nil {
@@ -62,7 +89,7 @@ func GenerateAmazonUrl(api AmazonMWSAPI, Action string, ActionPath string, Param
 	values := url.Values{}
 	values.Add("Action", Action)
 
-	if (api.AuthToken != "") {
+	if api.AuthToken != "" {
 		values.Add("MWSAuthToken", api.AuthToken)
 	}
 
