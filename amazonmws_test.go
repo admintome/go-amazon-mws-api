@@ -22,7 +22,7 @@ func Test_SignAmazonUrl_1(t *testing.T) {
 
 	resultUrl, err := SignAmazonUrl(url, api)
 	if err != nil {
-		t.Error("Signing failure: %v", err)
+		t.Errorf("Signing failure: %v", err)
 	}
 
 	if signedUrl != resultUrl {
